@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { RotateCw } from "lucide-react";
 import { DraftsList } from "@/ui/components/admin/drafts-list";
 import { RunsPanel } from "@/ui/components/admin/runs-panel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/ui/components/ui/tabs";
@@ -28,7 +27,7 @@ export default function AdminPage() {
             </TabsList>
 
             {tab === "runs" && (
-              <Button type="button" size='xs' disabled={isButtonLoading} onClick={trigger}>
+              <Button type="button" size="xs" loading={isButtonLoading} onClick={trigger}>
                 Generate
               </Button>
             )}

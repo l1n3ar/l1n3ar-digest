@@ -1,3 +1,6 @@
+"use client";
+
+import { useFormStatus } from "react-dom";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -10,6 +13,15 @@ import {
   AlertDialogAction,
 } from "@/ui/components/ui/alert-dialog";
 import { Button } from "@/ui/components/ui/button";
+
+function SubmitButton({ label, variant }: { label: string; variant: "default" | "destructive" | "outline" }) {
+  const { pending } = useFormStatus();
+  return (
+    <AlertDialogAction type="submit" size="xs" variant={variant} loading={pending}>
+      {label}
+    </AlertDialogAction>
+  );
+}
 
 export function ConfirmActionButton({
   label,
@@ -31,15 +43,13 @@ export function ConfirmActionButton({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
+          <AlertDialogTitle className="text-sm">{title}</AlertDialogTitle>
+          <AlertDialogDescription className="text-xs">{description}</AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
+        <AlertDialogFooter className="flex items-center">
           <AlertDialogCancel size="xs">Cancel</AlertDialogCancel>
           <form action={action}>
-            <AlertDialogAction type="submit" size="xs" variant={variant}>
-              {label}
-            </AlertDialogAction>
+            <SubmitButton label={label} variant={variant} />
           </form>
         </AlertDialogFooter>
       </AlertDialogContent>

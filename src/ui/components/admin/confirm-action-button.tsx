@@ -26,7 +26,7 @@ export function ConfirmActionButton({
 }) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger render={<Button type="button" size="xs" variant={variant} />}>
+      <AlertDialogTrigger render={<Button type="button" size="2xs" variant={variant} />}>
         {label}
       </AlertDialogTrigger>
       <AlertDialogContent>

@@ -1,50 +1,59 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useTransition } from "react";
 import { Loader2 } from "lucide-react";
-import type { GenerationRun } from "@/engine/types/generation-run";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRuns } from "@/ui/hooks/use-runs";
 import { generateAction } from "@/engine/actions/admin";
 import { Button } from "@/ui/components/ui/button";
 import { RunsList } from "@/ui/components/admin/runs-list";
 
-export function RunsPanel({ initialRuns }: { initialRuns: GenerationRun[] }) {
-  const [runs, setRuns] = useState(initialRuns);
+export function RunsPanel() {
+  const { data: runs, isLoading } = useRuns();
   const [isPending, startTransition] = useTransition();
+  const queryClient = useQueryClient();
+  const prevStatusRef = useRef<string | undefined>(undefined);
+
+  const latestStatus = runs?.[0]?.status;
+  const isRunning = latestStatus === "running";
+  const isButtonLoading = isPending || isRunning;
 
   useEffect(() => {
-    setRuns(initialRuns);
-  }, [initialRuns]);
-
-  const isRunning = runs[0]?.status === "running";
-  const isLoading = isPending || isRunning;
-
-  useEffect(() => {
-    if (!isRunning) return;
-
-    const interval = setInterval(async () => {
-      const res = await fetch("/api/admin/runs");
-      const data = await res.json();
-      setRuns(data.runs);
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [isRunning]);
+    if (prevStatusRef.current === "running" && (latestStatus === "done" || latestStatus === "error")) {
+      queryClient.invalidateQueries({ queryKey: ["drafts"] });
+      queryClient.invalidateQueries({ queryKey: ["feed"] });
+    }
+    prevStatusRef.current = latestStatus;
+  }, [latestStatus, queryClient]);
 
   return (
     <div>
-      <Button
-        type="button"
-        size="xs"
-        variant="outline"
-        disabled={isLoading}
-        onClick={() => startTransition(async () => { await generateAction(); })}
-      >
-        {isLoading && <Loader2 className="animate-spin" />}
-        Run
-      </Button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          size="xs"
+          variant="outline"
+          disabled={isButtonLoading}
+          onClick={() =>
+            startTransition(async () => {
+              await generateAction();
+              queryClient.invalidateQueries({ queryKey: ["runs"] });
+            })
+          }
+        >
+          {isButtonLoading && <Loader2 className="animate-spin" />}
+          Run
+        </Button>
+      </div>
 
       <div className="mt-4">
-        <RunsList runs={runs} />
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <RunsList runs={runs ?? []} />
+        )}
       </div>
     </div>
   );

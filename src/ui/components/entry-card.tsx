@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ExternalLink, PlayCircle } from "lucide-react";
 import type { DigestEntry } from "@/engine/types/digest";
 import { formatDate } from "@/ui/utils/format-date";
 import { H3, P, Muted, InlineLink } from "@/ui/components/ui/typography";
@@ -31,7 +32,8 @@ export function EntryCard({ entry, actions }: { entry: DigestEntry; actions?: Re
         {entry.links.length > 0 && (
           <div className="flex flex-wrap gap-x-3 gap-y-1">
             {entry.links.map((link) => (
-              <InlineLink key={link.url} href={link.url}>
+              <InlineLink key={link.url} href={link.url} className="flex items-center gap-1">
+                {link.kind === "video" ? <PlayCircle className="size-3" /> : <ExternalLink className="size-3" />}
                 {link.label}
               </InlineLink>
             ))}

@@ -1,5 +1,5 @@
 {
-  "id": "957a6667-f3b0-42ce-a311-f5a3438cf2d4",
+  "id": "dc5f6961-9f7b-48a9-862a-7101d4d877ff",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -97,6 +97,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'running'"
+        },
+        "trigger": {
+          "name": "trigger",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'manual'"
         },
         "log": {
           "name": "log",

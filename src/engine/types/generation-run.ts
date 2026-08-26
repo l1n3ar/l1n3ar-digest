@@ -3,6 +3,7 @@ export type RunLogEntry = { message: string; at: string };
 export type GenerationRun = {
   id: string;
   status: 'running' | 'done' | 'error';
+  trigger: 'manual' | 'cron';
   log: RunLogEntry[];
   draftsCreated: number;
   model: string | null;

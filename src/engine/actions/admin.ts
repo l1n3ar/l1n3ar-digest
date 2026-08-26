@@ -17,7 +17,7 @@ export async function deleteAction(id: string) {
 }
 
 export async function generateAction() {
-  const run = await createRun();
+  const run = await createRun('manual');
   after(() => generateDrafts(run.id));
   revalidatePath('/admin');
 }

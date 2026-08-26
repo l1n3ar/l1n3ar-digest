@@ -4,6 +4,7 @@ import type { RunLogEntry } from '@/engine/types/generation-run';
 export const generationRuns = pgTable('generation_runs', {
   id: uuid('id').primaryKey().defaultRandom(),
   status: text('status', { enum: ['running', 'done', 'error'] }).notNull().default('running'),
+  trigger: text('trigger', { enum: ['manual', 'cron'] }).notNull().default('manual'),
   log: jsonb('log').notNull().default([]).$type<RunLogEntry[]>(),
   draftsCreated: integer('drafts_created').notNull().default(0),
   model: text('model'),

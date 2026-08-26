@@ -1,3 +1,15 @@
+setup-dev:
+	npm install
+	@if [ ! -f .env.local ]; then \
+		cp .env.example .env.local; \
+		echo "Created .env.local, fill it in, then run 'make start-dev'."; \
+	fi
+
+start-dev:
+	make migrate
+	npm i
+	npm run dev
+
 push:
 	@echo "Enter your commit message:"
 	@read commit_message; \

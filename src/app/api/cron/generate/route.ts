@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const run = await createRun();
+  const run = await createRun('cron');
   const drafts = await generateDrafts(run.id);
   return NextResponse.json({ created: drafts.length });
 }

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const entriesSchema = z.object({
   entries: z.array(
@@ -10,10 +10,10 @@ export const entriesSchema = z.object({
         z.object({
           label: z.string(),
           url: z.string(),
-          kind: z.enum(['article', 'video']),
-        })
+          kind: z.enum(["article", "video"]),
+        }),
       ),
       buildIdea: z.string().nullable(),
-    })
+    }),
   ),
 });

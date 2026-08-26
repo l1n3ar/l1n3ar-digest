@@ -1,9 +1,9 @@
-import { eq, desc } from 'drizzle-orm';
-import { db } from './db';
-import { generationRuns } from '@/engine/schemas/db/generation-run';
-import type { GenerationRun } from '@/engine/types/generation-run';
+import { generationRuns } from "@/engine/schemas/db/generation-run";
+import type { GenerationRun } from "@/engine/types/generation-run";
+import { desc, eq } from "drizzle-orm";
+import { db } from "./db";
 
-export async function createRun(trigger: 'manual' | 'cron', deepRead: boolean): Promise<GenerationRun> {
+export async function createRun(trigger: "manual" | "cron", deepRead: boolean): Promise<GenerationRun> {
   const [row] = await db.insert(generationRuns).values({ trigger, deepRead }).returning();
   return row;
 }
@@ -18,14 +18,14 @@ export async function appendRunLog(id: string, message: string): Promise<void> {
 
 export async function finishRun(
   id: string,
-  status: 'done' | 'error',
+  status: "done" | "error",
   stats: {
     draftsCreated: number;
     model?: string;
     inputTokens?: number;
     outputTokens?: number;
     webSearchRequests?: number;
-  }
+  },
 ): Promise<void> {
   await db
     .update(generationRuns)

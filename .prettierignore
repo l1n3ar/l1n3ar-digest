@@ -1,0 +1,4 @@
+node_modules
+.next
+migrations
+package-lock.json

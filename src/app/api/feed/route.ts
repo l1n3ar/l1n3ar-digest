@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { getEntries } from '@/engine/lib/digest';
+import { getEntries } from "@/engine/lib/digest";
+import { NextResponse } from "next/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const entries = await getEntries();

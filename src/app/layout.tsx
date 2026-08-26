@@ -1,10 +1,10 @@
+import { Footer } from "@/ui/components/footer";
+import { Navbar } from "@/ui/components/navbar";
+import { QueryProvider } from "@/ui/components/query-provider";
+import { ThemeProvider } from "@/ui/components/theme-provider";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/ui/components/theme-provider";
-import { QueryProvider } from "@/ui/components/query-provider";
-import { Navbar } from "@/ui/components/navbar";
-import { Footer } from "@/ui/components/footer";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -23,9 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <QueryProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <Navbar />
-            <div className="min-h-0 flex-1 overflow-y-auto">
-              {children}
-            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
             <Footer />
           </ThemeProvider>
         </QueryProvider>

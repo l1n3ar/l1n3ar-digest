@@ -1,19 +1,19 @@
-import { eq, desc, sql } from 'drizzle-orm';
-import { streamText, Output, isStepCount } from 'ai';
+import { Output, isStepCount, streamText } from "ai";
+import { desc, eq, sql } from "drizzle-orm";
 
-import { db } from './db';
-import { anthropic } from '@/engine/config/providers';
-import { appendRunLog, finishRun } from './generation-runs';
-import { digestEntries } from '@/engine/schemas/db/digest';
-import { entriesSchema } from '@/engine/schemas/zod/digest';
 import {
-  GENERATION_PROMPT,
-  GENERATION_MODEL,
+  GENERATION_MAX_FETCHES,
   GENERATION_MAX_OUTPUT_TOKENS,
   GENERATION_MAX_SEARCHES,
-  GENERATION_MAX_FETCHES,
-} from '@/engine/config/generation';
-import type { DigestEntry, DigestLink } from '@/engine/types/digest';
+  GENERATION_MODEL,
+  GENERATION_PROMPT,
+} from "@/engine/config/generation";
+import { anthropic } from "@/engine/config/providers";
+import { digestEntries } from "@/engine/schemas/db/digest";
+import { entriesSchema } from "@/engine/schemas/zod/digest";
+import type { DigestEntry, DigestLink } from "@/engine/types/digest";
+import { db } from "./db";
+import { appendRunLog, finishRun } from "./generation-runs";
 
 export async function createDraft(entry: {
   title: string;
@@ -30,7 +30,7 @@ export async function getEntries(): Promise<DigestEntry[]> {
   return db
     .select()
     .from(digestEntries)
-    .where(eq(digestEntries.status, 'published'))
+    .where(eq(digestEntries.status, "published"))
     .orderBy(desc(digestEntries.publishedAt));
 }
 
@@ -38,22 +38,19 @@ export async function listDrafts(): Promise<DigestEntry[]> {
   return db
     .select()
     .from(digestEntries)
-    .where(eq(digestEntries.status, 'draft'))
+    .where(eq(digestEntries.status, "draft"))
     .orderBy(desc(digestEntries.createdAt));
 }
 
 export async function publishEntry(id: string): Promise<void> {
   await db
     .update(digestEntries)
-    .set({ status: 'published', publishedAt: sql`now()` })
+    .set({ status: "published", publishedAt: sql`now()` })
     .where(eq(digestEntries.id, id));
 }
 
 export async function unpublishEntry(id: string): Promise<void> {
-  await db
-    .update(digestEntries)
-    .set({ status: 'draft', publishedAt: null })
-    .where(eq(digestEntries.id, id));
+  await db.update(digestEntries).set({ status: "draft", publishedAt: null }).where(eq(digestEntries.id, id));
 }
 
 export async function deleteEntry(id: string): Promise<void> {
@@ -79,28 +76,28 @@ export async function generateDrafts(runId: string, deepRead: boolean): Promise<
       model: anthropic(GENERATION_MODEL),
       maxOutputTokens: GENERATION_MAX_OUTPUT_TOKENS,
       system: GENERATION_PROMPT,
-      prompt: 'Find recent AI/software engineering items worth digesting.',
+      prompt: "Find recent AI/software engineering items worth digesting.",
       tools,
       output: Output.object({ schema: entriesSchema }),
       stopWhen: isStepCount(stepBudget),
     });
 
     for await (const part of result.stream) {
-      if (part.type === 'tool-call' && part.toolName === 'web_search') {
+      if (part.type === "tool-call" && part.toolName === "web_search") {
         webSearchRequests += 1;
         const query = (part.input as { query?: string } | undefined)?.query;
-        await appendRunLog(runId, `searching: ${query ?? '(unknown query)'}`);
+        await appendRunLog(runId, `searching: ${query ?? "(unknown query)"}`);
       }
-      if (part.type === 'tool-result' && part.toolName === 'web_search') {
-        await appendRunLog(runId, 'search returned results');
+      if (part.type === "tool-result" && part.toolName === "web_search") {
+        await appendRunLog(runId, "search returned results");
       }
-      if (part.type === 'tool-call' && part.toolName === 'web_fetch') {
+      if (part.type === "tool-call" && part.toolName === "web_fetch") {
         webFetchRequests += 1;
         const url = (part.input as { url?: string } | undefined)?.url;
-        await appendRunLog(runId, `reading: ${url ?? '(unknown url)'}`);
+        await appendRunLog(runId, `reading: ${url ?? "(unknown url)"}`);
       }
-      if (part.type === 'tool-result' && part.toolName === 'web_fetch') {
-        await appendRunLog(runId, 'read source');
+      if (part.type === "tool-result" && part.toolName === "web_fetch") {
+        await appendRunLog(runId, "read source");
       }
     }
 
@@ -113,12 +110,12 @@ export async function generateDrafts(runId: string, deepRead: boolean): Promise<
         await appendRunLog(runId, `created draft: ${draft.title}`);
       }
     } else {
-      await appendRunLog(runId, 'generation finished without producing a parsed result');
+      await appendRunLog(runId, "generation finished without producing a parsed result");
     }
 
     const usage = await result.usage;
 
-    await finishRun(runId, 'done', {
+    await finishRun(runId, "done", {
       draftsCreated: drafts.length,
       model: GENERATION_MODEL,
       inputTokens: usage.inputTokens ?? 0,
@@ -127,7 +124,7 @@ export async function generateDrafts(runId: string, deepRead: boolean): Promise<
     });
   } catch (err) {
     await appendRunLog(runId, `error: ${err instanceof Error ? err.message : String(err)}`);
-    await finishRun(runId, 'error', {
+    await finishRun(runId, "error", {
       draftsCreated: drafts.length,
       model: GENERATION_MODEL,
       webSearchRequests: webSearchRequests + webFetchRequests,

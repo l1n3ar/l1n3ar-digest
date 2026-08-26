@@ -1,11 +1,11 @@
 "use client";
 
-import { Clock, CheckCircle2, XCircle } from "lucide-react";
 import type { GenerationRun } from "@/engine/types/generation-run";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/ui/components/ui/accordion";
 import { Muted } from "@/ui/components/ui/typography";
-import { formatDate } from "@/ui/utils/format-date";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/ui/components/ui/accordion";
 import { cn } from "@/ui/lib/utils";
+import { formatDate } from "@/ui/utils/format-date";
+import { CheckCircle2, Clock, XCircle } from "lucide-react";
 
 function StatusIcon({ status }: { status: GenerationRun["status"] }) {
   if (status === "running") return <Clock className="size-3.5 text-amber-500" />;
@@ -24,7 +24,7 @@ function MetaRow({ label, children, onClick }: { label: string; children: React.
 
 function RunItem({ run, onViewDrafts }: { run: GenerationRun; onViewDrafts: () => void }) {
   return (
-    <AccordionItem value={run.id} className='border-b'>
+    <AccordionItem value={run.id} className="border-b">
       <AccordionTrigger>
         <div className="flex items-center gap-2">
           <StatusIcon status={run.status} />

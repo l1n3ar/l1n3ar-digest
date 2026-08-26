@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
-import { ExternalLink, PlayCircle } from "lucide-react";
 import type { DigestEntry } from "@/engine/types/digest";
+import { H3, InlineLink, Muted, P } from "@/ui/components/ui/typography";
 import { formatDate } from "@/ui/utils/format-date";
-import { H3, P, Muted, InlineLink } from "@/ui/components/ui/typography";
+import { ExternalLink, PlayCircle } from "lucide-react";
+import type { ReactNode } from "react";
 
 export function EntryCard({ entry, actions }: { entry: DigestEntry; actions?: ReactNode }) {
   const date = entry.publishedAt ?? entry.createdAt;

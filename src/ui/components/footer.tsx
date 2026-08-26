@@ -1,4 +1,4 @@
-import { Muted, InlineLink } from "@/ui/components/ui/typography";
+import { InlineLink, Muted } from "@/ui/components/ui/typography";
 import { SITE_OWNER_NAME, SITE_OWNER_URL, SITE_REPO_URL } from "@/ui/config/site";
 
 export function Footer() {

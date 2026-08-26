@@ -1,4 +1,4 @@
-export type DigestLink = { label: string; url: string; kind: 'article' | 'video' };
+export type DigestLink = { label: string; url: string; kind: "article" | "video" };
 
 export type DigestEntry = {
   id: string;
@@ -7,7 +7,7 @@ export type DigestEntry = {
   topic: string;
   links: DigestLink[];
   buildIdea: string | null;
-  status: 'draft' | 'published';
+  status: "draft" | "published";
   createdAt: string;
   publishedAt: string | null;
 };

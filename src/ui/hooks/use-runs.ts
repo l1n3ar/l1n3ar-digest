@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import type { GenerationRun } from "@/engine/types/generation-run";
+import { useQuery } from "@tanstack/react-query";
 
 export function useRuns() {
   return useQuery({

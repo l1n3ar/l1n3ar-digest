@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import type { DigestEntry } from "@/engine/types/digest";
+import { useQuery } from "@tanstack/react-query";
 
 export function useFeed() {
   return useQuery({

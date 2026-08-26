@@ -1,8 +1,8 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
-import { useFeed } from "@/ui/hooks/use-feed";
 import { EntryCard } from "@/ui/components/entry-card";
+import { useFeed } from "@/ui/hooks/use-feed";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
   const { data: entries, isLoading } = useFeed();

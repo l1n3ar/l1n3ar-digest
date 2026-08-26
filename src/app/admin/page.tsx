@@ -1,16 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { Zap, BookOpen } from "lucide-react";
+import { GENERATION_DEEP_READ_ENABLED } from "@/engine/config/feature-flags";
 import { DraftsList } from "@/ui/components/admin/drafts-list";
 import { PublishedList } from "@/ui/components/admin/published-list";
 import { RunsPanel } from "@/ui/components/admin/runs-panel";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/ui/components/ui/tabs";
 import { Button } from "@/ui/components/ui/button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/ui/components/ui/dropdown-menu";
-import { useRuns } from "@/ui/hooks/use-runs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/ui/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/components/ui/tabs";
 import { useGenerateRun } from "@/ui/hooks/use-generate-run";
-import { GENERATION_DEEP_READ_ENABLED } from "@/engine/config/feature-flags";
+import { useRuns } from "@/ui/hooks/use-runs";
+import { BookOpen, Zap } from "lucide-react";
+import { useState } from "react";
 
 export default function AdminPage() {
   const [tab, setTab] = useState("drafts");

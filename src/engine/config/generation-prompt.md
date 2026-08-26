@@ -45,6 +45,7 @@ Write in a neutral, informational register. State what's new and why it's techni
 ## Output
 
 For each item worth including, write:
+
 - a clear, specific title (not clickbait)
 - a 2-3 sentence summary of what's actually new or interesting - don't write more than this - make this part really simple to understand - never overcomplicate it. The source link is right there for anyone who wants the full depth.
 - a short topic label (2-3 words)

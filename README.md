@@ -14,12 +14,12 @@ make start-dev
 
 ## Environment variables
 
-See `.env.example` for the full list, grouped and commented. Required:
+See `.env.example` for the full list. Required:
 
-| Variable | Purpose |
-|---|---|
-| `DATABASE_URL` | Postgres connection string |
-| `ADMIN_PASSWORD` | Gates `/admin` and the cron endpoint |
+| Variable                                                       | Purpose                                                          |
+| -------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `DATABASE_URL`                                                 | Postgres connection string                                       |
+| `ADMIN_PASSWORD`                                               | Gates `/admin` and the cron endpoint                             |
 | `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `AI_GATEWAY_API_KEY` | Whichever provider is active in `src/engine/config/providers.ts` |
 
 Any `@ai-sdk/<provider>` package works the same way. Add its key under the env var name that package's own docs specify, add an export to `providers.ts`, point `digest.ts` at it.
@@ -82,7 +82,3 @@ Anthropic-only right now, `digest.ts` calls `anthropic.tools.webFetch_20250910()
 ## Deploying
 
 Runs on Vercel Cron. Schedule is in `vercel.json`.
-
-## MCP server
-
-Not built yet. Will let an MCP client curate and publish against a deployed instance directly.

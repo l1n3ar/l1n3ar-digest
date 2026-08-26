@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { GenerationRun } from "@/types/generation-run";
 import { H3, Muted } from "@/components/ui/typography";
 import { formatDate } from "@/utils/format-date";
@@ -55,27 +54,7 @@ function RunItem({ run }: { run: GenerationRun }) {
   );
 }
 
-export function RunsList({ initialRuns }: { initialRuns: GenerationRun[] }) {
-  const [runs, setRuns] = useState(initialRuns);
-
-  useEffect(() => {
-    setRuns(initialRuns);
-  }, [initialRuns]);
-
-  const hasRunning = runs.some((r) => r.status === "running");
-
-  useEffect(() => {
-    if (!hasRunning) return;
-
-    const interval = setInterval(async () => {
-      const res = await fetch("/api/admin/runs");
-      const data = await res.json();
-      setRuns(data.runs);
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [hasRunning]);
-
+export function RunsList({ runs }: { runs: GenerationRun[] }) {
   return (
     <div className="flex flex-col gap-4">
       {runs.map((run) => (

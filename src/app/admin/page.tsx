@@ -1,10 +1,9 @@
 import { listDrafts } from "@/lib/digest";
 import { listRuns } from "@/lib/generation-runs";
-import { publishAction, deleteAction, generateAction } from "@/actions/admin";
+import { publishAction, deleteAction } from "@/actions/admin";
 import { EntryCard } from "@/components/entry-card";
 import { ConfirmActionButton } from "@/components/admin/confirm-action-button";
-import { RunsList } from "@/components/admin/runs-list";
-import { Button } from "@/components/ui/button";
+import { RunsPanel } from "@/components/admin/runs-panel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export const dynamic = "force-dynamic";
@@ -51,16 +50,8 @@ export default async function AdminPage() {
             )}
           </TabsContent>
 
-          <TabsContent value="runs">
-            <form action={generateAction} className="mt-6">
-              <Button type="submit" size="xs" variant="outline">
-                Run
-              </Button>
-            </form>
-
-            <div className="mt-4">
-              <RunsList initialRuns={runs} />
-            </div>
+          <TabsContent value="runs" className="mt-6">
+            <RunsPanel initialRuns={runs} />
           </TabsContent>
         </Tabs>
       </div>

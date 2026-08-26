@@ -66,14 +66,10 @@ export async function generateDrafts(runId: string, deepRead: boolean): Promise<
   let webFetchRequests = 0;
 
   try {
-    const tools = deepRead
-      ? {
-          web_search: anthropic.tools.webSearch_20250305({ maxUses: GENERATION_MAX_SEARCHES }),
-          web_fetch: anthropic.tools.webFetch_20250910({ maxUses: GENERATION_MAX_FETCHES }),
-        }
-      : {
-          web_search: anthropic.tools.webSearch_20250305({ maxUses: GENERATION_MAX_SEARCHES }),
-        };
+    const tools = {
+      web_search: anthropic.tools.webSearch_20250305({ maxUses: GENERATION_MAX_SEARCHES }),
+      ...(deepRead ? { web_fetch: anthropic.tools.webFetch_20250910({ maxUses: GENERATION_MAX_FETCHES }) } : {}),
+    };
 
     const stepBudget = deepRead
       ? GENERATION_MAX_SEARCHES * 2 + GENERATION_MAX_FETCHES * 2 + 5

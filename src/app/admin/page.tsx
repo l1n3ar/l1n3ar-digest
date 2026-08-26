@@ -6,11 +6,13 @@ import { PublishedList } from "@/ui/components/admin/published-list";
 import { RunsPanel } from "@/ui/components/admin/runs-panel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/ui/components/ui/tabs";
 import { Button } from "@/ui/components/ui/button";
+import { Switch } from "@/ui/components/ui/switch";
 import { useRuns } from "@/ui/hooks/use-runs";
 import { useGenerateRun } from "@/ui/hooks/use-generate-run";
 
 export default function AdminPage() {
   const [tab, setTab] = useState("drafts");
+  const [deepRead, setDeepRead] = useState(false);
   const { data: runs } = useRuns();
   const { trigger, isPending } = useGenerateRun();
 
@@ -29,9 +31,15 @@ export default function AdminPage() {
             </TabsList>
 
             {tab === "runs" && (
-              <Button type="button" size="xs" loading={isButtonLoading} onClick={trigger}>
-                Generate
-              </Button>
+              <div className="flex items-center gap-3">
+                <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  Deep read
+                  <Switch size="sm" checked={deepRead} onCheckedChange={setDeepRead} />
+                </label>
+                <Button type="button" size="xs" loading={isButtonLoading} onClick={() => trigger(deepRead)}>
+                  Generate
+                </Button>
+              </div>
             )}
           </div>
 

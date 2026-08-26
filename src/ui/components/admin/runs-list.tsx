@@ -48,6 +48,7 @@ function RunItem({ run, onViewDrafts }: { run: GenerationRun; onViewDrafts: () =
                 <MetaRow label="Trigger">{run.trigger === "cron" ? "Cron" : "Manual"}</MetaRow>
                 <MetaRow label="Created">{formatDate(run.createdAt)}</MetaRow>
                 <MetaRow label="Model">{run.model ?? "—"}</MetaRow>
+                <MetaRow label="Deep read">{run.deepRead ? "Yes" : "No"}</MetaRow>
 
                 {run.status !== "running" && (
                   <>

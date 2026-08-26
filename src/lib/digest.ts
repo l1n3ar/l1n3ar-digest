@@ -5,10 +5,12 @@ import { anthropic } from './anthropic';
 import { appendRunLog, finishRun } from './generation-runs';
 import { digestEntries } from '@/schemas/db/digest';
 import { GENERATION_PROMPT } from '@/data/prompts/digest';
+import { estimateCostUsd } from '@/data/prompts/pricing';
 import { ENTRIES_SCHEMA } from '@/schemas/json/digest';
 import type { DigestEntry, DigestLink } from '@/types/digest';
 
 const OUTPUT_FORMAT = jsonSchemaOutputFormat(ENTRIES_SCHEMA);
+const MODEL = 'claude-sonnet-5';
 
 export async function createDraft(entry: {
   title: string;
@@ -60,7 +62,7 @@ export async function generateDrafts(runId: string): Promise<DigestEntry[]> {
 
   try {
     const stream = anthropic.messages.stream({
-      model: 'claude-sonnet-5',
+      model: MODEL,
       max_tokens: 4096,
       system: GENERATION_PROMPT,
       messages: [{ role: 'user', content: 'Find recent AI/software engineering items worth digesting.' }],
@@ -89,10 +91,21 @@ export async function generateDrafts(runId: string): Promise<DigestEntry[]> {
       }
     }
 
-    await finishRun(runId, 'done', drafts.length);
+    const inputTokens = message.usage.input_tokens;
+    const outputTokens = message.usage.output_tokens;
+    const webSearchRequests = message.usage.server_tool_use?.web_search_requests ?? 0;
+
+    await finishRun(runId, 'done', {
+      draftsCreated: drafts.length,
+      model: MODEL,
+      inputTokens,
+      outputTokens,
+      webSearchRequests,
+      estimatedCostUsd: estimateCostUsd(MODEL, inputTokens, outputTokens),
+    });
   } catch (err) {
     await appendRunLog(runId, `error: ${err instanceof Error ? err.message : String(err)}`);
-    await finishRun(runId, 'error', drafts.length);
+    await finishRun(runId, 'error', { draftsCreated: drafts.length, model: MODEL });
     throw err;
   }
 

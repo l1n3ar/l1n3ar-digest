@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { listRuns } from '@/lib/generation-runs';
+import { listRuns } from '@/engine/lib/generation-runs';
 
 export async function GET() {
   const runs = await listRuns();

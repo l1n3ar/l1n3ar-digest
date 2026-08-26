@@ -1,10 +1,10 @@
-import { listDrafts } from "@/lib/digest";
-import { listRuns } from "@/lib/generation-runs";
-import { publishAction, deleteAction } from "@/actions/admin";
-import { EntryCard } from "@/components/entry-card";
-import { ConfirmActionButton } from "@/components/admin/confirm-action-button";
-import { RunsPanel } from "@/components/admin/runs-panel";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { listDrafts } from "@/engine/lib/digest";
+import { listRuns } from "@/engine/lib/generation-runs";
+import { publishAction, deleteAction } from "@/engine/actions/admin";
+import { EntryCard } from "@/ui/components/entry-card";
+import { ConfirmActionButton } from "@/ui/components/admin/confirm-action-button";
+import { RunsPanel } from "@/ui/components/admin/runs-panel";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/ui/components/ui/tabs";
 
 export const dynamic = "force-dynamic";
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateDrafts } from '@/lib/digest';
-import { createRun } from '@/lib/generation-runs';
+import { generateDrafts } from '@/engine/lib/digest';
+import { createRun } from '@/engine/lib/generation-runs';
 
 export async function GET(request: NextRequest) {
   const auth = request.headers.get('authorization');

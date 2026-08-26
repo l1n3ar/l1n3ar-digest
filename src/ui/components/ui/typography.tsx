@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/ui/lib/utils"
 import type { ComponentProps } from "react"
 
 function H1({ className, ...props }: ComponentProps<"h1">) {

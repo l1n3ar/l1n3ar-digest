@@ -1,8 +1,8 @@
 "use client";
 
-import type { GenerationRun } from "@/types/generation-run";
-import { H3, Muted } from "@/components/ui/typography";
-import { formatDate } from "@/utils/format-date";
+import type { GenerationRun } from "@/engine/types/generation-run";
+import { H3, Muted } from "@/ui/components/ui/typography";
+import { formatDate } from "@/ui/utils/format-date";
 
 function RunItem({ run }: { run: GenerationRun }) {
   const label = run.status === "running" ? "Running…" : run.status === "done" ? "Done" : "Error";

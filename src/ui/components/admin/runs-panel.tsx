@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
-import type { GenerationRun } from "@/types/generation-run";
-import { generateAction } from "@/actions/admin";
-import { Button } from "@/components/ui/button";
-import { RunsList } from "@/components/admin/runs-list";
+import type { GenerationRun } from "@/engine/types/generation-run";
+import { generateAction } from "@/engine/actions/admin";
+import { Button } from "@/ui/components/ui/button";
+import { RunsList } from "@/ui/components/admin/runs-list";
 
 export function RunsPanel({ initialRuns }: { initialRuns: GenerationRun[] }) {
   const [runs, setRuns] = useState(initialRuns);

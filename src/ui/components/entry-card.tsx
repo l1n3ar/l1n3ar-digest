@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import type { DigestEntry } from "@/types/digest";
-import { formatDate } from "@/utils/format-date";
-import { H3, P, Muted, InlineLink } from "@/components/ui/typography";
+import type { DigestEntry } from "@/engine/types/digest";
+import { formatDate } from "@/ui/utils/format-date";
+import { H3, P, Muted, InlineLink } from "@/ui/components/ui/typography";
 
 export function EntryCard({ entry, actions }: { entry: DigestEntry; actions?: ReactNode }) {
   const date = entry.publishedAt ?? entry.createdAt;

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/ui/components/theme-toggle";
 
 export function Navbar() {
   return (

@@ -2,8 +2,8 @@
 
 import { after } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { publishEntry, deleteEntry, generateDrafts } from '@/lib/digest';
-import { createRun } from '@/lib/generation-runs';
+import { publishEntry, deleteEntry, generateDrafts } from '@/engine/lib/digest';
+import { createRun } from '@/engine/lib/generation-runs';
 
 export async function publishAction(id: string) {
   await publishEntry(id);

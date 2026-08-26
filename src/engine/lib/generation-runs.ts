@@ -1,7 +1,7 @@
 import { eq, desc } from 'drizzle-orm';
 import { db } from './db';
-import { generationRuns } from '@/schemas/db/generation-run';
-import type { GenerationRun } from '@/types/generation-run';
+import { generationRuns } from '@/engine/schemas/db/generation-run';
+import type { GenerationRun } from '@/engine/types/generation-run';
 
 export async function createRun(): Promise<GenerationRun> {
   const [row] = await db.insert(generationRuns).values({}).returning();

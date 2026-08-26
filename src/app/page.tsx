@@ -1,6 +1,6 @@
-import { getEntries } from "@/lib/digest";
-import { EntryCard } from "@/components/entry-card";
-import { Muted } from "@/components/ui/typography";
+import { getEntries } from "@/engine/lib/digest";
+import { EntryCard } from "@/ui/components/entry-card";
+import { Muted } from "@/ui/components/ui/typography";
 
 export const dynamic = "force-dynamic";
 

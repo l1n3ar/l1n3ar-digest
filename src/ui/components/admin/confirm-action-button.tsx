@@ -8,8 +8,8 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "@/ui/components/ui/alert-dialog";
+import { Button } from "@/ui/components/ui/button";
 
 export function ConfirmActionButton({
   label,

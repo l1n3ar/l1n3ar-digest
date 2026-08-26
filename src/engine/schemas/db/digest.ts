@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, jsonb, timestamp, check } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import type { DigestLink } from '@/types/digest';
+import type { DigestLink } from '@/engine/types/digest';
 
 export const digestEntries = pgTable(
   'digest_entries',

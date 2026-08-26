@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, jsonb, integer, timestamp } from 'drizzle-orm/pg-core';
-import type { RunLogEntry } from '@/types/generation-run';
+import type { RunLogEntry } from '@/engine/types/generation-run';
 
 export const generationRuns = pgTable('generation_runs', {
   id: uuid('id').primaryKey().defaultRandom(),

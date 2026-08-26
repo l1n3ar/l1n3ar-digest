@@ -2,12 +2,12 @@ import { eq, desc, sql } from 'drizzle-orm';
 import { streamText, Output, isStepCount } from 'ai';
 
 import { db } from './db';
-import { anthropic } from '@/config/providers';
+import { anthropic } from '@/engine/config/providers';
 import { appendRunLog, finishRun } from './generation-runs';
-import { digestEntries } from '@/schemas/db/digest';
-import { entriesSchema } from '@/schemas/zod/digest';
-import { GENERATION_PROMPT, GENERATION_MODEL, GENERATION_MAX_OUTPUT_TOKENS, GENERATION_MAX_SEARCHES } from '@/config/generation';
-import type { DigestEntry, DigestLink } from '@/types/digest';
+import { digestEntries } from '@/engine/schemas/db/digest';
+import { entriesSchema } from '@/engine/schemas/zod/digest';
+import { GENERATION_PROMPT, GENERATION_MODEL, GENERATION_MAX_OUTPUT_TOKENS, GENERATION_MAX_SEARCHES } from '@/engine/config/generation';
+import type { DigestEntry, DigestLink } from '@/engine/types/digest';
 
 export async function createDraft(entry: {
   title: string;

@@ -7,7 +7,7 @@ export function EntryCard({ entry, actions }: { entry: DigestEntry; actions?: Re
   const date = entry.publishedAt ?? entry.createdAt;
 
   return (
-    <details className="group border-b border-border pb-8">
+    <details className="group border-b border-border pb-4">
       <summary className="flex list-none flex-col gap-2 cursor-pointer [&::-webkit-details-marker]:hidden">
         <H3>{entry.title}</H3>
 
@@ -38,7 +38,7 @@ export function EntryCard({ entry, actions }: { entry: DigestEntry; actions?: Re
           </div>
         )}
 
-        {actions && <div className="flex gap-4 pt-2">{actions}</div>}
+        {actions && <div className="flex gap-2 pt-2">{actions}</div>}
       </div>
     </details>
   );

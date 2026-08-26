@@ -17,7 +17,7 @@ export default async function Home() {
             ))}
           </div>
         ) : (
-          <Muted>No entries yet.</Muted>
+         <></>
         )}
       </div>
     </main>

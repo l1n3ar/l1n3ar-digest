@@ -1,4 +1,5 @@
-import type { DigestEntry } from "@/lib/db";
+import type { DigestEntry } from "@/types/digest";
+import { formatDate } from "@/utils/format-date";
 
 const entries: DigestEntry[] = [
   {
@@ -41,14 +42,6 @@ const entries: DigestEntry[] = [
     publishedAt: "2026-08-19T09:00:00.000Z",
   },
 ];
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
 
 function Entry({ entry }: { entry: DigestEntry }) {
   return (

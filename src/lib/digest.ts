@@ -57,7 +57,7 @@ export async function generateDrafts(): Promise<DigestEntry[]> {
     max_tokens: 4096,
     system: GENERATION_PROMPT,
     messages: [{ role: 'user', content: 'Find recent AI/software engineering items worth digesting.' }],
-    tools: [{ type: 'web_search_20260318', name: 'web_search' }],
+    tools: [{ type: 'web_search_20260318', name: 'web_search', max_uses: 8 }],
     output_config: { format: { type: 'json_schema', schema: ENTRIES_SCHEMA } },
   });
 

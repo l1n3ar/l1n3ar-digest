@@ -8,9 +8,9 @@ export function useGenerateRun() {
   const [isPending, startTransition] = useTransition();
   const queryClient = useQueryClient();
 
-  const trigger = () =>
+  const trigger = (deepRead: boolean) =>
     startTransition(async () => {
-      await generateAction();
+      await generateAction(deepRead);
       queryClient.invalidateQueries({ queryKey: ["runs"] });
     });
 

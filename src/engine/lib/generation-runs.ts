@@ -3,8 +3,8 @@ import { db } from './db';
 import { generationRuns } from '@/engine/schemas/db/generation-run';
 import type { GenerationRun } from '@/engine/types/generation-run';
 
-export async function createRun(trigger: 'manual' | 'cron'): Promise<GenerationRun> {
-  const [row] = await db.insert(generationRuns).values({ trigger }).returning();
+export async function createRun(trigger: 'manual' | 'cron', deepRead: boolean): Promise<GenerationRun> {
+  const [row] = await db.insert(generationRuns).values({ trigger, deepRead }).returning();
   return row;
 }
 

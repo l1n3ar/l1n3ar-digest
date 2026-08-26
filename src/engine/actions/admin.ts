@@ -16,7 +16,7 @@ export async function deleteAction(id: string) {
   await deleteEntry(id);
 }
 
-export async function generateAction() {
-  const run = await createRun('manual');
-  after(() => generateDrafts(run.id));
+export async function generateAction(deepRead: boolean) {
+  const run = await createRun('manual', deepRead);
+  after(() => generateDrafts(run.id, deepRead));
 }

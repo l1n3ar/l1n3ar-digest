@@ -1,10 +1,11 @@
-import { pgTable, uuid, text, jsonb, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, jsonb, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
 import type { RunLogEntry } from '@/engine/types/generation-run';
 
 export const generationRuns = pgTable('generation_runs', {
   id: uuid('id').primaryKey().defaultRandom(),
   status: text('status', { enum: ['running', 'done', 'error'] }).notNull().default('running'),
   trigger: text('trigger', { enum: ['manual', 'cron'] }).notNull().default('manual'),
+  deepRead: boolean('deep_read').notNull().default(false),
   log: jsonb('log').notNull().default([]).$type<RunLogEntry[]>(),
   draftsCreated: integer('drafts_created').notNull().default(0),
   model: text('model'),

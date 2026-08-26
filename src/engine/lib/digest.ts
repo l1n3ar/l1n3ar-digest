@@ -6,7 +6,13 @@ import { anthropic } from '@/engine/config/providers';
 import { appendRunLog, finishRun } from './generation-runs';
 import { digestEntries } from '@/engine/schemas/db/digest';
 import { entriesSchema } from '@/engine/schemas/zod/digest';
-import { GENERATION_PROMPT, GENERATION_MODEL, GENERATION_MAX_OUTPUT_TOKENS, GENERATION_MAX_SEARCHES } from '@/engine/config/generation';
+import {
+  GENERATION_PROMPT,
+  GENERATION_MODEL,
+  GENERATION_MAX_OUTPUT_TOKENS,
+  GENERATION_MAX_SEARCHES,
+  GENERATION_MAX_FETCHES,
+} from '@/engine/config/generation';
 import type { DigestEntry, DigestLink } from '@/engine/types/digest';
 
 export async function createDraft(entry: {
@@ -54,21 +60,33 @@ export async function deleteEntry(id: string): Promise<void> {
   await db.delete(digestEntries).where(eq(digestEntries.id, id));
 }
 
-export async function generateDrafts(runId: string): Promise<DigestEntry[]> {
+export async function generateDrafts(runId: string, deepRead: boolean): Promise<DigestEntry[]> {
   const drafts: DigestEntry[] = [];
   let webSearchRequests = 0;
+  let webFetchRequests = 0;
 
   try {
+    const tools = deepRead
+      ? {
+          web_search: anthropic.tools.webSearch_20250305({ maxUses: GENERATION_MAX_SEARCHES }),
+          web_fetch: anthropic.tools.webFetch_20250910({ maxUses: GENERATION_MAX_FETCHES }),
+        }
+      : {
+          web_search: anthropic.tools.webSearch_20250305({ maxUses: GENERATION_MAX_SEARCHES }),
+        };
+
+    const stepBudget = deepRead
+      ? GENERATION_MAX_SEARCHES * 2 + GENERATION_MAX_FETCHES * 2 + 5
+      : GENERATION_MAX_SEARCHES * 2 + 5;
+
     const result = streamText({
       model: anthropic(GENERATION_MODEL),
       maxOutputTokens: GENERATION_MAX_OUTPUT_TOKENS,
       system: GENERATION_PROMPT,
       prompt: 'Find recent AI/software engineering items worth digesting.',
-      tools: {
-        web_search: anthropic.tools.webSearch_20250305({ maxUses: GENERATION_MAX_SEARCHES }),
-      },
+      tools,
       output: Output.object({ schema: entriesSchema }),
-      stopWhen: isStepCount(GENERATION_MAX_SEARCHES * 2 + 5),
+      stopWhen: isStepCount(stepBudget),
     });
 
     for await (const part of result.stream) {
@@ -79,6 +97,14 @@ export async function generateDrafts(runId: string): Promise<DigestEntry[]> {
       }
       if (part.type === 'tool-result' && part.toolName === 'web_search') {
         await appendRunLog(runId, 'search returned results');
+      }
+      if (part.type === 'tool-call' && part.toolName === 'web_fetch') {
+        webFetchRequests += 1;
+        const url = (part.input as { url?: string } | undefined)?.url;
+        await appendRunLog(runId, `reading: ${url ?? '(unknown url)'}`);
+      }
+      if (part.type === 'tool-result' && part.toolName === 'web_fetch') {
+        await appendRunLog(runId, 'read source');
       }
     }
 
@@ -101,11 +127,15 @@ export async function generateDrafts(runId: string): Promise<DigestEntry[]> {
       model: GENERATION_MODEL,
       inputTokens: usage.inputTokens ?? 0,
       outputTokens: usage.outputTokens ?? 0,
-      webSearchRequests,
+      webSearchRequests: webSearchRequests + webFetchRequests,
     });
   } catch (err) {
     await appendRunLog(runId, `error: ${err instanceof Error ? err.message : String(err)}`);
-    await finishRun(runId, 'error', { draftsCreated: drafts.length, model: GENERATION_MODEL, webSearchRequests });
+    await finishRun(runId, 'error', {
+      draftsCreated: drafts.length,
+      model: GENERATION_MODEL,
+      webSearchRequests: webSearchRequests + webFetchRequests,
+    });
     throw err;
   }
 

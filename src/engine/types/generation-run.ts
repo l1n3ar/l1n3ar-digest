@@ -4,6 +4,7 @@ export type GenerationRun = {
   id: string;
   status: 'running' | 'done' | 'error';
   trigger: 'manual' | 'cron';
+  deepRead: boolean;
   log: RunLogEntry[];
   draftsCreated: number;
   model: string | null;

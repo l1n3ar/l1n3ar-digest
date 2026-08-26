@@ -11,6 +11,6 @@ export function useRuns() {
       const data = await res.json();
       return data.runs;
     },
-    refetchInterval: (query) => (query.state.data?.[0]?.status === "running" ? 2000 : false),
+    refetchInterval: (query) => (query.state.data?.[0]?.status === "running" ? 5000 : false),
   });
 }

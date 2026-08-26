@@ -8,40 +8,42 @@ export function EntryCard({ entry, actions }: { entry: DigestEntry; actions?: Re
   const date = entry.publishedAt ?? entry.createdAt;
 
   return (
-    <details className="group border-b border-border pb-4">
-      <summary className="flex list-none flex-col gap-2 cursor-pointer [&::-webkit-details-marker]:hidden">
-        <H3>{entry.title}</H3>
+    <div className="border-b border-border pb-4">
+      <details className="group">
+        <summary className="flex list-none flex-col gap-2 cursor-pointer [&::-webkit-details-marker]:hidden">
+          <H3>{entry.title}</H3>
 
-        <Muted className="flex items-center gap-2">
-          <span>{entry.topic}</span>
-          <span>·</span>
-          <time dateTime={date}>{formatDate(date)}</time>
-        </Muted>
-      </summary>
-
-      <div className="mt-3 flex flex-col gap-2">
-        <P>{entry.summary}</P>
-
-        {entry.buildIdea && (
-          <Muted>
-            <span className="font-medium text-foreground">Build idea — </span>
-            {entry.buildIdea}
+          <Muted className="flex items-center gap-2">
+            <span>{entry.topic}</span>
+            <span>·</span>
+            <time dateTime={date}>{formatDate(date)}</time>
           </Muted>
-        )}
+        </summary>
 
-        {entry.links.length > 0 && (
-          <div className="flex flex-wrap gap-x-3 gap-y-1">
-            {entry.links.map((link) => (
-              <InlineLink key={link.url} href={link.url} className="flex items-center gap-1">
-                {link.kind === "video" ? <PlayCircle className="size-3" /> : <ExternalLink className="size-3" />}
-                {link.label}
-              </InlineLink>
-            ))}
-          </div>
-        )}
+        <div className="mt-3 flex flex-col gap-2">
+          <P>{entry.summary}</P>
 
-        {actions && <div className="flex gap-2 pt-2">{actions}</div>}
-      </div>
-    </details>
+          {entry.buildIdea && (
+            <Muted>
+              <span className="font-medium text-foreground">Build idea — </span>
+              {entry.buildIdea}
+            </Muted>
+          )}
+
+          {entry.links.length > 0 && (
+            <div className="flex flex-wrap gap-x-3 gap-y-1">
+              {entry.links.map((link) => (
+                <InlineLink key={link.url} href={link.url} className="flex items-center gap-1">
+                  {link.kind === "video" ? <PlayCircle className="size-3" /> : <ExternalLink className="size-3" />}
+                  {link.label}
+                </InlineLink>
+              ))}
+            </div>
+          )}
+        </div>
+      </details>
+
+      {actions && <div className="flex gap-2 pt-2">{actions}</div>}
+    </div>
   );
 }

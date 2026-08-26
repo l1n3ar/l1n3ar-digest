@@ -1,11 +1,15 @@
 'use server';
 
 import { after } from 'next/server';
-import { publishEntry, deleteEntry, generateDrafts } from '@/engine/lib/digest';
+import { publishEntry, unpublishEntry, deleteEntry, generateDrafts } from '@/engine/lib/digest';
 import { createRun } from '@/engine/lib/generation-runs';
 
 export async function publishAction(id: string) {
   await publishEntry(id);
+}
+
+export async function unpublishAction(id: string) {
+  await unpublishEntry(id);
 }
 
 export async function deleteAction(id: string) {

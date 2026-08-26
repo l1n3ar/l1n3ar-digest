@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { DraftsList } from "@/ui/components/admin/drafts-list";
+import { PublishedList } from "@/ui/components/admin/published-list";
 import { RunsPanel } from "@/ui/components/admin/runs-panel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/ui/components/ui/tabs";
 import { Button } from "@/ui/components/ui/button";
@@ -23,6 +24,7 @@ export default function AdminPage() {
           <div className="flex shrink-0 items-center justify-between">
             <TabsList>
               <TabsTrigger value="drafts">Drafts</TabsTrigger>
+              <TabsTrigger value="published">Published</TabsTrigger>
               <TabsTrigger value="runs">Runs</TabsTrigger>
             </TabsList>
 
@@ -35,6 +37,10 @@ export default function AdminPage() {
 
           <TabsContent value="drafts" className="mt-6 min-h-0 flex-1 overflow-y-auto">
             <DraftsList />
+          </TabsContent>
+
+          <TabsContent value="published" className="mt-6 min-h-0 flex-1 overflow-y-auto">
+            <PublishedList />
           </TabsContent>
 
           <TabsContent value="runs" className="mt-6 min-h-0 flex-1 overflow-y-auto">

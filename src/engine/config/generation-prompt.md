@@ -28,7 +28,7 @@ Run a small, targeted set of searches across these sources, using site-specific 
 
 For each item worth including, write:
 - a clear, specific title (not clickbait)
-- a 2-3 sentence summary of what's actually new or interesting
+- a 2-3 sentence summary of what's actually new or interesting - don't write more than this - make this part really simple to understand - never overcomplicate it.
 - a short topic label (2-3 words)
 - 1-2 source links, linking to the actual discussion/release/post, not a search results page
 - optionally, a concrete "build idea": something a developer could build off the back of this. Use null if nothing concrete comes to mind — don't force it.

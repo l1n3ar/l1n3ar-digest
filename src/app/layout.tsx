@@ -21,7 +21,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <Navbar />
-          {children}
+          <div className="flex-1 overflow-y-auto">
+            {children}
+          </div>
           <Footer />
         </ThemeProvider>
       </body>

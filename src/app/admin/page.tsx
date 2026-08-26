@@ -1,5 +1,5 @@
 import { listDrafts } from "@/lib/digest";
-import { publishAction, deleteAction } from "@/actions/admin";
+import { publishAction, deleteAction, generateAction } from "@/actions/admin";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { H1, P, Muted, InlineLink } from "@/components/ui/typography";
@@ -11,7 +11,14 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-5 py-10 sm:px-8">
-      <H1>Drafts</H1>
+      <div className="flex items-center justify-between">
+        <H1>Drafts</H1>
+        <form action={generateAction}>
+          <Button type="submit" size="sm" variant="outline">
+            Run
+          </Button>
+        </form>
+      </div>
 
       {drafts.length === 0 ? (
         <Muted className="mt-6">No drafts.</Muted>

@@ -76,10 +76,6 @@ export function RunsList({ initialRuns }: { initialRuns: GenerationRun[] }) {
     return () => clearInterval(interval);
   }, [hasRunning]);
 
-  if (runs.length === 0) {
-    return <Muted>No runs yet.</Muted>;
-  }
-
   return (
     <div className="flex flex-col gap-4">
       {runs.map((run) => (

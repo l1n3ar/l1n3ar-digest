@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/ui/components/theme-toggle";
+import { Separator } from "@/ui/components/ui/separator";
 import { SITE_NAME } from "@/ui/config/site";
 
 export function Navbar() {
@@ -14,6 +15,7 @@ export function Navbar() {
           <Link href="/admin" className="text-xs text-muted-foreground hover:text-foreground">
             Admin
           </Link>
+          <Separator orientation="vertical" className="h-4 self-center" />
           <ThemeToggle />
         </div>
       </div>

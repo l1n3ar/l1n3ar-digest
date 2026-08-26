@@ -6,9 +6,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRuns } from "@/ui/hooks/use-runs";
 import { generateAction } from "@/engine/actions/admin";
 import { Button } from "@/ui/components/ui/button";
+import { Separator } from "@/ui/components/ui/separator";
 import { RunsList } from "@/ui/components/admin/runs-list";
 
-export function RunsPanel() {
+export function RunsPanel({ onViewDrafts }: { onViewDrafts: () => void }) {
   const { data: runs, isLoading } = useRuns();
   const [isPending, startTransition] = useTransition();
   const queryClient = useQueryClient();
@@ -28,7 +29,7 @@ export function RunsPanel() {
 
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex justify-start">
         <Button
           type="button"
           size="xs"
@@ -46,15 +47,15 @@ export function RunsPanel() {
         </Button>
       </div>
 
-      <div className="mt-4">
-        {isLoading ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="animate-spin text-muted-foreground" />
-          </div>
-        ) : (
-          <RunsList runs={runs ?? []} />
-        )}
-      </div>
+      <Separator className="my-4" />
+
+      {isLoading ? (
+        <div className="flex justify-center py-20">
+          <Loader2 className="animate-spin text-muted-foreground" />
+        </div>
+      ) : (
+        <RunsList runs={runs ?? []} onViewDrafts={onViewDrafts} />
+      )}
     </div>
   );
 }

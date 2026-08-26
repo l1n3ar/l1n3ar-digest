@@ -1,16 +1,11 @@
 import { eq, desc, sql } from 'drizzle-orm';
-import { jsonSchemaOutputFormat } from '@anthropic-ai/sdk/helpers/json-schema';
+import { streamText, Output, isStepCount, gateway } from 'ai';
 import { db } from './db';
-import { anthropic } from './anthropic';
 import { appendRunLog, finishRun } from './generation-runs';
 import { digestEntries } from '@/schemas/db/digest';
-import { GENERATION_PROMPT } from '@/data/prompts/digest';
-import { estimateCostUsd } from '@/data/prompts/pricing';
-import { ENTRIES_SCHEMA } from '@/schemas/json/digest';
+import { entriesSchema } from '@/schemas/zod/digest';
+import { GENERATION_PROMPT, GENERATION_MODEL, GENERATION_MAX_OUTPUT_TOKENS, GENERATION_MAX_SEARCHES } from '@/config/generation';
 import type { DigestEntry, DigestLink } from '@/types/digest';
-
-const OUTPUT_FORMAT = jsonSchemaOutputFormat(ENTRIES_SCHEMA);
-const MODEL = 'claude-sonnet-5';
 
 export async function createDraft(entry: {
   title: string;
@@ -59,29 +54,36 @@ export async function deleteEntry(id: string): Promise<void> {
 
 export async function generateDrafts(runId: string): Promise<DigestEntry[]> {
   const drafts: DigestEntry[] = [];
+  let webSearchRequests = 0;
 
   try {
-    const stream = anthropic.messages.stream({
-      model: MODEL,
-      max_tokens: 4096,
+    const result = streamText({
+      model: GENERATION_MODEL,
+      maxOutputTokens: GENERATION_MAX_OUTPUT_TOKENS,
       system: GENERATION_PROMPT,
-      messages: [{ role: 'user', content: 'Find recent AI/software engineering items worth digesting.' }],
-      tools: [{ type: 'web_search_20260318', name: 'web_search', max_uses: 8 }],
-      output_config: { format: OUTPUT_FORMAT },
+      prompt: 'Find recent AI/software engineering items worth digesting.',
+      tools: {
+        web_search: gateway.tools.exaSearch({
+          numResults: 5,
+          contents: { highlights: true },
+        }),
+      },
+      output: Output.object({ schema: entriesSchema }),
+      stopWhen: isStepCount(GENERATION_MAX_SEARCHES * 2 + 5),
     });
 
-    stream.on('contentBlock', (block) => {
-      if (block.type === 'server_tool_use' && block.name === 'web_search') {
-        const query = (block.input as { query?: string } | undefined)?.query;
-        void appendRunLog(runId, `searching: ${query ?? '(unknown query)'}`);
+    for await (const part of result.stream) {
+      if (part.type === 'tool-call' && part.toolName === 'web_search') {
+        webSearchRequests += 1;
+        const query = (part.input as { query?: string } | undefined)?.query;
+        await appendRunLog(runId, `searching: ${query ?? '(unknown query)'}`);
       }
-      if (block.type === 'web_search_tool_result') {
-        void appendRunLog(runId, 'search returned results');
+      if (part.type === 'tool-result' && part.toolName === 'web_search') {
+        await appendRunLog(runId, 'search returned results');
       }
-    });
+    }
 
-    const message = await stream.finalMessage();
-    const parsed = message.parsed_output;
+    const parsed = await result.output;
 
     if (parsed) {
       for (const entry of parsed.entries) {
@@ -89,23 +91,22 @@ export async function generateDrafts(runId: string): Promise<DigestEntry[]> {
         drafts.push(draft);
         await appendRunLog(runId, `created draft: ${draft.title}`);
       }
+    } else {
+      await appendRunLog(runId, 'generation finished without producing a parsed result');
     }
 
-    const inputTokens = message.usage.input_tokens;
-    const outputTokens = message.usage.output_tokens;
-    const webSearchRequests = message.usage.server_tool_use?.web_search_requests ?? 0;
+    const usage = await result.usage;
 
     await finishRun(runId, 'done', {
       draftsCreated: drafts.length,
-      model: MODEL,
-      inputTokens,
-      outputTokens,
+      model: GENERATION_MODEL,
+      inputTokens: usage.inputTokens ?? 0,
+      outputTokens: usage.outputTokens ?? 0,
       webSearchRequests,
-      estimatedCostUsd: estimateCostUsd(MODEL, inputTokens, outputTokens),
     });
   } catch (err) {
     await appendRunLog(runId, `error: ${err instanceof Error ? err.message : String(err)}`);
-    await finishRun(runId, 'error', { draftsCreated: drafts.length, model: MODEL });
+    await finishRun(runId, 'error', { draftsCreated: drafts.length, model: GENERATION_MODEL, webSearchRequests });
     throw err;
   }
 

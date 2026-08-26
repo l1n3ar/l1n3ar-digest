@@ -1,3 +1,5 @@
+.PHONY : setup-dev start-dev push migrate migration
+
 setup-dev:
 	npm install
 	@if [ ! -f .env.local ]; then \

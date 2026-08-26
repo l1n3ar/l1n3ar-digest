@@ -33,4 +33,4 @@ For each item worth including, write:
 - 1-2 source links, linking to the actual discussion/release/post, not a search results page
 - optionally, a concrete "build idea": something a developer could build off the back of this. Use null if nothing concrete comes to mind — don't force it.
 
-Prefer quality over quantity. Return 2 to 5 entries.`;
+Prefer quality over quantity. Return 7 to 10 entries.`;

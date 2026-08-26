@@ -1,6 +1,7 @@
-import { sql } from './db';
+import { eq, desc, sql } from 'drizzle-orm';
+import { db } from './db';
 import { anthropic } from './anthropic';
-import { mapDigestRow } from '@/utils/digest';
+import { digestEntries } from '@/schemas/db/digest';
 import { GENERATION_PROMPT } from '@/data/prompts/digest';
 import { ENTRIES_SCHEMA } from '@/schemas/json/digest';
 import type { DigestEntry, DigestLink } from '@/types/digest';
@@ -12,52 +13,42 @@ export async function createDraft(entry: {
   links: DigestLink[];
   buildIdea: string | null;
 }): Promise<DigestEntry> {
-  const rows = await sql`
-    INSERT INTO digest_entries (title, summary, topic, links, build_idea)
-    VALUES (${entry.title}, ${entry.summary}, ${entry.topic}, ${JSON.stringify(entry.links)}, ${entry.buildIdea})
-    RETURNING id, title, summary, topic, links, build_idea, status, created_at, published_at
-  `;
-  return mapDigestRow(rows[0]);
+  const [row] = await db.insert(digestEntries).values(entry).returning();
+  return row;
 }
 
 export async function getEntries(): Promise<DigestEntry[]> {
-  const rows = await sql`
-    SELECT id, title, summary, topic, links, build_idea, status, created_at, published_at
-    FROM digest_entries
-    WHERE status = 'published'
-    ORDER BY published_at DESC
-  `;
-  return rows.map(mapDigestRow);
+  return db
+    .select()
+    .from(digestEntries)
+    .where(eq(digestEntries.status, 'published'))
+    .orderBy(desc(digestEntries.publishedAt));
 }
 
 export async function listDrafts(): Promise<DigestEntry[]> {
-  const rows = await sql`
-    SELECT id, title, summary, topic, links, build_idea, status, created_at, published_at
-    FROM digest_entries
-    WHERE status = 'draft'
-    ORDER BY created_at DESC
-  `;
-  return rows.map(mapDigestRow);
+  return db
+    .select()
+    .from(digestEntries)
+    .where(eq(digestEntries.status, 'draft'))
+    .orderBy(desc(digestEntries.createdAt));
 }
 
 export async function publishEntry(id: string): Promise<void> {
-  await sql`
-    UPDATE digest_entries
-    SET status = 'published', published_at = now()
-    WHERE id = ${id}
-  `;
+  await db
+    .update(digestEntries)
+    .set({ status: 'published', publishedAt: sql`now()` })
+    .where(eq(digestEntries.id, id));
 }
 
 export async function unpublishEntry(id: string): Promise<void> {
-  await sql`
-    UPDATE digest_entries
-    SET status = 'draft', published_at = null
-    WHERE id = ${id}
-  `;
+  await db
+    .update(digestEntries)
+    .set({ status: 'draft', publishedAt: null })
+    .where(eq(digestEntries.id, id));
 }
 
 export async function deleteEntry(id: string): Promise<void> {
-  await sql`DELETE FROM digest_entries WHERE id = ${id}`;
+  await db.delete(digestEntries).where(eq(digestEntries.id, id));
 }
 
 export async function generateDrafts(): Promise<DigestEntry[]> {

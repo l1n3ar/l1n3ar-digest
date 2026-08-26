@@ -112,7 +112,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="border-t border-foreground/10">
+      <footer>
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-6 text-xs sm:px-8 lg:px-10">
           <p className="text-foreground/45">
             Built by{" "}

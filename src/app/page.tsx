@@ -97,18 +97,45 @@ function Entry({ entry }: { entry: DigestEntry }) {
 
 export default function Home() {
   return (
-    <div className="flex flex-1 justify-center bg-background text-foreground">
-      <main className="w-full max-w-5xl px-5 py-10 sm:px-8 lg:px-10">
-        {entries.length > 0 ? (
-          <div className="grid grid-cols-1 items-start gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-            {entries.map((entry) => (
-              <Entry key={entry.id} entry={entry} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-foreground/60">No entries yet.</p>
-        )}
+    <div className="flex flex-1 flex-col bg-background text-foreground">
+      <main className="flex flex-1 justify-center">
+        <div className="w-full max-w-5xl px-5 py-10 sm:px-8 lg:px-10">
+          {entries.length > 0 ? (
+            <div className="grid grid-cols-1 items-start gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+              {entries.map((entry) => (
+                <Entry key={entry.id} entry={entry} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-foreground/60">No entries yet.</p>
+          )}
+        </div>
       </main>
+
+      <footer className="border-t border-foreground/10">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-6 text-xs sm:px-8 lg:px-10">
+          <p className="text-foreground/45">
+            Built by{" "}
+            <a
+              href="https://github.com/l1n3ar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground hover:underline"
+            >
+              l1n3ar
+            </a>
+          </p>
+
+          <a
+            href="https://github.com/l1n3ar/l1n3ar-digest"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground/45 hover:text-foreground hover:underline"
+          >
+            Source on GitHub
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/ui/components/theme-toggle";
+import { SITE_NAME } from "@/ui/config/site";
 
 export function Navbar() {
   return (
     <header >
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
         <Link href="/" className="text-xs font-semibold tracking-tight">
-          /l1n3ar-digest
+          {SITE_NAME}
         </Link>
 
         <div className="flex items-center gap-4">

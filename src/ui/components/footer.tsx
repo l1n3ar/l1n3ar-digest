@@ -1,4 +1,5 @@
 import { Muted, InlineLink } from "@/ui/components/ui/typography";
+import { SITE_OWNER_NAME, SITE_OWNER_URL, SITE_REPO_URL } from "@/ui/config/site";
 
 export function Footer() {
   return (
@@ -7,16 +8,16 @@ export function Footer() {
         <Muted>
           Built by{" "}
           <a
-            href="https://github.com/l1n3ar"
+            href={SITE_OWNER_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-foreground hover:underline "
           >
-            l1n3ar
+            {SITE_OWNER_NAME}
           </a>
         </Muted>
 
-        <InlineLink href="https://github.com/l1n3ar/l1n3ar-digest" className="text-muted-foreground hover:text-foreground">
+        <InlineLink href={SITE_REPO_URL} className="text-muted-foreground hover:text-foreground">
           Source on GitHub
         </InlineLink>
       </div>

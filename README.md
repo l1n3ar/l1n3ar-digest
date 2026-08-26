@@ -14,6 +14,8 @@ make start-dev
 
 ## Environment variables
 
+See `.env.example` for the full list, grouped and commented. Required:
+
 | Variable | Purpose |
 |---|---|
 | `DATABASE_URL` | Postgres connection string |
@@ -21,6 +23,8 @@ make start-dev
 | `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `AI_GATEWAY_API_KEY` | Whichever provider is active in `src/engine/config/providers.ts` |
 
 Any `@ai-sdk/<provider>` package works the same way. Add its key under the env var name that package's own docs specify, add an export to `providers.ts`, point `digest.ts` at it.
+
+Everything else in `.env.example` is optional, with defaults in `src/engine/config/generation.ts`.
 
 ## What it curates
 
@@ -59,6 +63,15 @@ tools: { web_search: gateway.tools.exaSearch({ numResults: 5, contents: { highli
 ## Generation knobs
 
 Model, max output tokens, max searches per run: `src/engine/config/generation.ts`, each overridable by an env var of the same name.
+
+## Deep read
+
+Off by default. When enabled, generation can fetch and read full source articles instead of summarizing from search snippets, richer entries, slower and more expensive per run.
+
+Anthropic-only right now, `digest.ts` calls `anthropic.tools.webFetch_20250910()` directly. Turning this on under a different provider does nothing unless that provider's fetch tool is wired in the same place.
+
+- `NEXT_PUBLIC_GENERATION_DEEP_READ_ENABLED`: turns the feature on/off. When off, the admin UI only offers Quick.
+- `GENERATION_DEEP_READ_DEFAULT`: whether cron runs use deep read by default. Manual runs always choose per-run from the Generate dropdown.
 
 ## Architecture
 

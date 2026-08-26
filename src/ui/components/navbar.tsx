@@ -11,11 +11,11 @@ export function Navbar() {
           {SITE_NAME}
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-center gap-4">
           <Link href="/admin" className="text-xs text-muted-foreground hover:text-foreground">
             Admin
           </Link>
-          <Separator orientation="vertical" className="h-4 self-center" />
+         
           <ThemeToggle />
         </div>
       </div>

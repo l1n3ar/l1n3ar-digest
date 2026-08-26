@@ -1,23 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useTransition } from "react";
+import { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRuns } from "@/ui/hooks/use-runs";
-import { generateAction } from "@/engine/actions/admin";
-import { Button } from "@/ui/components/ui/button";
-import { Separator } from "@/ui/components/ui/separator";
 import { RunsList } from "@/ui/components/admin/runs-list";
 
 export function RunsPanel({ onViewDrafts }: { onViewDrafts: () => void }) {
   const { data: runs, isLoading } = useRuns();
-  const [isPending, startTransition] = useTransition();
   const queryClient = useQueryClient();
   const prevStatusRef = useRef<string | undefined>(undefined);
 
   const latestStatus = runs?.[0]?.status;
-  const isRunning = latestStatus === "running";
-  const isButtonLoading = isPending || isRunning;
 
   useEffect(() => {
     if (prevStatusRef.current === "running" && (latestStatus === "done" || latestStatus === "error")) {
@@ -27,35 +21,13 @@ export function RunsPanel({ onViewDrafts }: { onViewDrafts: () => void }) {
     prevStatusRef.current = latestStatus;
   }, [latestStatus, queryClient]);
 
-  return (
-    <div>
-      <div className="flex justify-start">
-        <Button
-          type="button"
-          size="xs"
-          variant="outline"
-          disabled={isButtonLoading}
-          onClick={() =>
-            startTransition(async () => {
-              await generateAction();
-              queryClient.invalidateQueries({ queryKey: ["runs"] });
-            })
-          }
-        >
-          {isButtonLoading && <Loader2 className="animate-spin" />}
-          Run
-        </Button>
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="animate-spin text-muted-foreground" />
       </div>
+    );
+  }
 
-      <Separator className="my-4" />
-
-      {isLoading ? (
-        <div className="flex justify-center py-20">
-          <Loader2 className="animate-spin text-muted-foreground" />
-        </div>
-      ) : (
-        <RunsList runs={runs ?? []} onViewDrafts={onViewDrafts} />
-      )}
-    </div>
-  );
+  return <RunsList runs={runs ?? []} onViewDrafts={onViewDrafts} />;
 }

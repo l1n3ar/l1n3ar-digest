@@ -1,85 +1,39 @@
+import { getEntries } from "@/lib/digest";
 import type { DigestEntry } from "@/types/digest";
 import { formatDate } from "@/utils/format-date";
-
-const entries: DigestEntry[] = [
-  {
-    id: "1",
-    title: "Structured outputs are quietly becoming the default way to call LLMs",
-    summary:
-      "More providers are pushing JSON-schema-constrained generation as the primary interface, not an add-on. It removes a whole class of parsing bugs and makes tool use far more reliable in production.",
-    topic: "LLM tooling",
-    links: [
-      { label: "Structured outputs, explained", url: "https://example.com/structured-outputs", kind: "article" },
-    ],
-    buildIdea:
-      "A CLI that wraps any API response in a schema-validated retry loop, so flaky JSON never reaches your app code.",
-    publishedAt: "2026-08-24T09:00:00.000Z",
-  },
-  {
-    id: "2",
-    title: "Vector search is being replaced by hybrid retrieval almost everywhere",
-    summary:
-      "Pure embedding similarity keeps losing to BM25 + reranker combos on real-world corpora. The pattern now: cheap lexical pass, small candidate set, then a cross-encoder rerank.",
-    topic: "Retrieval",
-    links: [
-      { label: "Hybrid search in production", url: "https://example.com/hybrid-search", kind: "article" },
-      { label: "Rerankers explained", url: "https://example.com/rerankers", kind: "video" },
-    ],
-    buildIdea: null,
-    publishedAt: "2026-08-22T09:00:00.000Z",
-  },
-  {
-    id: "3",
-    title: "Small on-device models are good enough for real UI features now",
-    summary:
-      "Sub-1B models running in-browser via WebGPU can handle classification, autocomplete ranking, and light summarization without a network round trip.",
-    topic: "On-device ML",
-    links: [
-      { label: "WebGPU inference in 2026", url: "https://example.com/webgpu-inference", kind: "video" },
-    ],
-    buildIdea:
-      "A browser extension that ranks your open tabs by relevance to what you're currently typing, entirely offline.",
-    publishedAt: "2026-08-19T09:00:00.000Z",
-  },
-];
+import { H3, P, Muted, InlineLink } from "@/components/ui/typography";
 
 function Entry({ entry }: { entry: DigestEntry }) {
   return (
-    <details className="group border-b border-foreground/10 pb-8">
+    <details className="group border-b border-border pb-8">
       <summary className="flex list-none flex-col gap-2 cursor-pointer [&::-webkit-details-marker]:hidden">
-        <h2 className="text-[15px] font-medium leading-snug">{entry.title}</h2>
+        <H3>{entry.title}</H3>
 
-        <div className="flex items-center gap-2 text-xs text-foreground/45">
+        <Muted className="flex items-center gap-2">
           <span>{entry.topic}</span>
           <span>·</span>
-          <time dateTime={entry.publishedAt}>{formatDate(entry.publishedAt)}</time>
-        </div>
+          {entry.publishedAt && (
+            <time dateTime={entry.publishedAt}>{formatDate(entry.publishedAt)}</time>
+          )}
+        </Muted>
       </summary>
 
       <div className="mt-3 flex flex-col gap-2">
-        <p className="text-[13px] leading-relaxed text-foreground/70">
-          {entry.summary}
-        </p>
+        <P>{entry.summary}</P>
 
         {entry.buildIdea && (
-          <p className="text-xs leading-relaxed text-foreground/70">
+          <Muted>
             <span className="font-medium text-foreground">Build idea — </span>
             {entry.buildIdea}
-          </p>
+          </Muted>
         )}
 
         {entry.links.length > 0 && (
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
+          <div className="flex flex-wrap gap-x-3 gap-y-1">
             {entry.links.map((link) => (
-              <a
-                key={link.url}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground"
-              >
+              <InlineLink key={link.url} href={link.url}>
                 {link.label}
-              </a>
+              </InlineLink>
             ))}
           </div>
         )}
@@ -88,9 +42,11 @@ function Entry({ entry }: { entry: DigestEntry }) {
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const entries = await getEntries();
+
   return (
-    <div className="flex flex-1 flex-col bg-background text-foreground">
+    <div className="flex flex-1 flex-col">
       <main className="flex flex-1 justify-center">
         <div className="w-full max-w-5xl px-5 py-10 sm:px-8 lg:px-10">
           {entries.length > 0 ? (
@@ -100,14 +56,14 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-foreground/60">No entries yet.</p>
+            <Muted>No entries yet.</Muted>
           )}
         </div>
       </main>
 
       <footer>
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-6 text-xs sm:px-8 lg:px-10">
-          <p className="text-foreground/45">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-6 sm:px-8 lg:px-10">
+          <Muted>
             Built by{" "}
             <a
               href="https://github.com/l1n3ar"
@@ -117,16 +73,11 @@ export default function Home() {
             >
               l1n3ar
             </a>
-          </p>
+          </Muted>
 
-          <a
-            href="https://github.com/l1n3ar/l1n3ar-digest"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-foreground/45 hover:text-foreground hover:underline"
-          >
+          <InlineLink href="https://github.com/l1n3ar/l1n3ar-digest" className="text-muted-foreground hover:text-foreground">
             Source on GitHub
-          </a>
+          </InlineLink>
         </div>
       </footer>
     </div>

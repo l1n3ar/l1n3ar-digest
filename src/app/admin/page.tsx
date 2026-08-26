@@ -1,59 +1,61 @@
-import { listDrafts } from '@/lib/digest';
-import { publishAction, deleteAction } from '@/actions/admin';
+import { listDrafts } from "@/lib/digest";
+import { publishAction, deleteAction } from "@/actions/admin";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { H1, P, Muted, InlineLink } from "@/components/ui/typography";
 
 export default async function AdminPage() {
   const drafts = await listDrafts();
 
   return (
     <main className="mx-auto w-full max-w-3xl px-5 py-10 sm:px-8">
-      <h1 className="text-lg font-semibold">Drafts</h1>
+      <H1>Drafts</H1>
 
       {drafts.length === 0 ? (
-        <p className="mt-6 text-sm text-foreground/60">No drafts.</p>
+        <Muted className="mt-6">No drafts.</Muted>
       ) : (
         <div className="mt-6 flex flex-col gap-6">
           {drafts.map((entry) => (
-            <div key={entry.id} className="flex flex-col gap-2 border-b border-foreground/10 pb-6">
-              <h2 className="text-[15px] font-medium leading-snug">{entry.title}</h2>
-              <p className="text-xs text-foreground/45">{entry.topic}</p>
-              <p className="text-[13px] leading-relaxed text-foreground/70">{entry.summary}</p>
+            <Card key={entry.id}>
+              <CardHeader>
+                <CardTitle>{entry.title}</CardTitle>
+                <CardDescription>{entry.topic}</CardDescription>
+              </CardHeader>
 
-              {entry.buildIdea && (
-                <p className="text-xs leading-relaxed text-foreground/70">
-                  <span className="font-medium text-foreground">Build idea — </span>
-                  {entry.buildIdea}
-                </p>
-              )}
+              <CardContent className="flex flex-col gap-3">
+                <P>{entry.summary}</P>
 
-              {entry.links.length > 0 && (
-                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
-                  {entry.links.map((link) => (
-                    <a
-                      key={link.url}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-foreground underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
-                </div>
-              )}
+                {entry.buildIdea && (
+                  <Muted>
+                    <span className="font-medium text-foreground">Build idea — </span>
+                    {entry.buildIdea}
+                  </Muted>
+                )}
 
-              <div className="flex gap-4 pt-2">
+                {entry.links.length > 0 && (
+                  <div className="flex flex-wrap gap-x-3 gap-y-1">
+                    {entry.links.map((link) => (
+                      <InlineLink key={link.url} href={link.url}>
+                        {link.label}
+                      </InlineLink>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+
+              <CardFooter className="gap-2">
                 <form action={publishAction.bind(null, entry.id)}>
-                  <button type="submit" className="text-xs font-medium text-foreground underline underline-offset-4">
+                  <Button type="submit" size="sm">
                     Publish
-                  </button>
+                  </Button>
                 </form>
                 <form action={deleteAction.bind(null, entry.id)}>
-                  <button type="submit" className="text-xs font-medium text-foreground/60 underline underline-offset-4">
+                  <Button type="submit" size="sm" variant="destructive">
                     Delete
-                  </button>
+                  </Button>
                 </form>
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       )}

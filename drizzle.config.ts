@@ -4,7 +4,7 @@ process.loadEnvFile('.env.local');
 
 export default defineConfig({
 
-  schema: './src/schemas/db/*.ts',
+  schema: './src/engine/schemas/db/*.ts',
   out: './migrations',
   dialect: 'postgresql',
   dbCredentials: {

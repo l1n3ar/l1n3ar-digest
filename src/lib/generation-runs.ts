@@ -25,7 +25,6 @@ export async function finishRun(
     inputTokens?: number;
     outputTokens?: number;
     webSearchRequests?: number;
-    estimatedCostUsd?: number | null;
   }
 ): Promise<void> {
   await db

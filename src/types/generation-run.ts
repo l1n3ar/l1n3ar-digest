@@ -9,7 +9,6 @@ export type GenerationRun = {
   inputTokens: number;
   outputTokens: number;
   webSearchRequests: number;
-  estimatedCostUsd: number | null;
   createdAt: string;
   finishedAt: string | null;
 };

@@ -2,7 +2,7 @@ import { sql } from './db';
 import { anthropic } from './anthropic';
 import { mapDigestRow } from '@/utils/digest';
 import { GENERATION_PROMPT } from '@/data/prompts/digest';
-import { ENTRIES_SCHEMA } from '@/schemas/digest';
+import { ENTRIES_SCHEMA } from '@/schemas/json/digest';
 import type { DigestEntry, DigestLink } from '@/types/digest';
 
 export async function createDraft(entry: {

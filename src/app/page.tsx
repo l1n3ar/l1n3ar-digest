@@ -1,48 +1,8 @@
 import { getEntries } from "@/lib/digest";
-import type { DigestEntry } from "@/types/digest";
-import { formatDate } from "@/utils/format-date";
-import { H3, P, Muted, InlineLink } from "@/components/ui/typography";
+import { EntryCard } from "@/components/entry-card";
+import { Muted } from "@/components/ui/typography";
 
 export const dynamic = "force-dynamic";
-
-function Entry({ entry }: { entry: DigestEntry }) {
-  return (
-    <details className="group border-b border-border pb-8">
-      <summary className="flex list-none flex-col gap-2 cursor-pointer [&::-webkit-details-marker]:hidden">
-        <H3>{entry.title}</H3>
-
-        <Muted className="flex items-center gap-2">
-          <span>{entry.topic}</span>
-          <span>·</span>
-          {entry.publishedAt && (
-            <time dateTime={entry.publishedAt}>{formatDate(entry.publishedAt)}</time>
-          )}
-        </Muted>
-      </summary>
-
-      <div className="mt-3 flex flex-col gap-2">
-        <P>{entry.summary}</P>
-
-        {entry.buildIdea && (
-          <Muted>
-            <span className="font-medium text-foreground">Build idea — </span>
-            {entry.buildIdea}
-          </Muted>
-        )}
-
-        {entry.links.length > 0 && (
-          <div className="flex flex-wrap gap-x-3 gap-y-1">
-            {entry.links.map((link) => (
-              <InlineLink key={link.url} href={link.url}>
-                {link.label}
-              </InlineLink>
-            ))}
-          </div>
-        )}
-      </div>
-    </details>
-  );
-}
 
 export default async function Home() {
   const entries = await getEntries();
@@ -53,7 +13,7 @@ export default async function Home() {
         {entries.length > 0 ? (
           <div className="grid grid-cols-1 items-start gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
             {entries.map((entry) => (
-              <Entry key={entry.id} entry={entry} />
+              <EntryCard key={entry.id} entry={entry} />
             ))}
           </div>
         ) : (

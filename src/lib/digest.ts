@@ -1,6 +1,8 @@
 import { eq, desc, sql } from 'drizzle-orm';
-import { streamText, Output, isStepCount, gateway } from 'ai';
+import { streamText, Output, isStepCount } from 'ai';
+
 import { db } from './db';
+import { anthropic } from '@/config/providers';
 import { appendRunLog, finishRun } from './generation-runs';
 import { digestEntries } from '@/schemas/db/digest';
 import { entriesSchema } from '@/schemas/zod/digest';
@@ -58,15 +60,12 @@ export async function generateDrafts(runId: string): Promise<DigestEntry[]> {
 
   try {
     const result = streamText({
-      model: GENERATION_MODEL,
+      model: anthropic(GENERATION_MODEL),
       maxOutputTokens: GENERATION_MAX_OUTPUT_TOKENS,
       system: GENERATION_PROMPT,
       prompt: 'Find recent AI/software engineering items worth digesting.',
       tools: {
-        web_search: gateway.tools.exaSearch({
-          numResults: 5,
-          contents: { highlights: true },
-        }),
+        web_search: anthropic.tools.webSearch_20250305({ maxUses: GENERATION_MAX_SEARCHES }),
       },
       output: Output.object({ schema: entriesSchema }),
       stopWhen: isStepCount(GENERATION_MAX_SEARCHES * 2 + 5),

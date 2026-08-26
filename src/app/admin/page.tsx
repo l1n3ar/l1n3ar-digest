@@ -14,7 +14,7 @@ export default async function AdminPage() {
       <div className="flex items-center justify-between">
         <H1>Drafts</H1>
         <form action={generateAction}>
-          <Button type="submit" size="sm" variant="outline">
+          <Button type="submit" size="xs" variant="outline">
             Run
           </Button>
         </form>
@@ -25,10 +25,10 @@ export default async function AdminPage() {
       ) : (
         <div className="mt-6 flex flex-col gap-6">
           {drafts.map((entry) => (
-            <Card key={entry.id}>
+            <Card key={entry.id} size="sm">
               <CardHeader>
-                <CardTitle>{entry.title}</CardTitle>
-                <CardDescription>{entry.topic}</CardDescription>
+                <CardTitle className="text-sm">{entry.title}</CardTitle>
+                <CardDescription className="text-xs">{entry.topic}</CardDescription>
               </CardHeader>
 
               <CardContent className="flex flex-col gap-3">
@@ -54,12 +54,12 @@ export default async function AdminPage() {
 
               <CardFooter className="gap-2">
                 <form action={publishAction.bind(null, entry.id)}>
-                  <Button type="submit" size="sm">
+                  <Button type="submit" size="xs">
                     Publish
                   </Button>
                 </form>
                 <form action={deleteAction.bind(null, entry.id)}>
-                  <Button type="submit" size="sm" variant="destructive">
+                  <Button type="submit" size="xs" variant="destructive">
                     Delete
                   </Button>
                 </form>

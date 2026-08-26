@@ -1,5 +1,5 @@
 {
-  "id": "2618acfc-e5b4-49ae-ac59-4100c24725d1",
+  "id": "3b8fd6a3-04ee-4cae-8e74-073dba0b3ac6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -72,7 +72,12 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "digest_entries_status_check": {
+          "name": "digest_entries_status_check",
+          "value": "\"digest_entries\".\"status\" IN ('draft', 'published')"
+        }
+      },
       "isRLSEnabled": false
     }
   },

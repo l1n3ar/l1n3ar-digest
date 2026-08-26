@@ -7,5 +7,6 @@ CREATE TABLE "digest_entries" (
 	"build_idea" text,
 	"status" text DEFAULT 'draft' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"published_at" timestamp with time zone
+	"published_at" timestamp with time zone,
+	CONSTRAINT "digest_entries_status_check" CHECK ("digest_entries"."status" IN ('draft', 'published'))
 );

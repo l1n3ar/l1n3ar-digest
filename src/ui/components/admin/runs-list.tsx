@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
 import type { GenerationRun } from "@/engine/types/generation-run";
 import { Muted } from "@/ui/components/ui/typography";
@@ -18,21 +17,9 @@ function statusLabel(status: GenerationRun["status"]) {
   return "Error";
 }
 
-function RunItem({ run, forceOpen }: { run: GenerationRun; forceOpen: boolean }) {
-  const [open, setOpen] = useState(forceOpen);
-
-  useEffect(() => {
-    if (forceOpen) setOpen(true);
-  }, [forceOpen]);
-
+function RunItem({ run, defaultOpen }: { run: GenerationRun; defaultOpen: boolean }) {
   return (
-    <details
-      open={forceOpen || open}
-      onToggle={(e) => {
-        if (!forceOpen) setOpen(e.currentTarget.open);
-      }}
-      className="group border-b border-border pb-4"
-    >
+    <details open={defaultOpen} className="group border-b border-border pb-4">
       <summary className="flex list-none cursor-pointer items-center gap-2 [&::-webkit-details-marker]:hidden">
         <StatusIcon status={run.status} />
         <span className="text-xs font-medium">{statusLabel(run.status)}</span>
@@ -70,7 +57,7 @@ export function RunsList({ runs }: { runs: GenerationRun[] }) {
   return (
     <div className="flex flex-col gap-4">
       {runs.map((run, i) => (
-        <RunItem key={run.id} run={run} forceOpen={i === 0 && run.status === "running"} />
+        <RunItem key={run.id} run={run} defaultOpen={i === 0} />
       ))}
     </div>
   );

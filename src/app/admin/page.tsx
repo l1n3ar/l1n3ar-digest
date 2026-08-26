@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "@/components/ui/button";
 import { H1, P, Muted, InlineLink } from "@/components/ui/typography";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
   const drafts = await listDrafts();
 

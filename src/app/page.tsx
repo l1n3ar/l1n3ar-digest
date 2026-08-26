@@ -3,6 +3,8 @@ import type { DigestEntry } from "@/types/digest";
 import { formatDate } from "@/utils/format-date";
 import { H3, P, Muted, InlineLink } from "@/components/ui/typography";
 
+export const dynamic = "force-dynamic";
+
 function Entry({ entry }: { entry: DigestEntry }) {
   return (
     <details className="group border-b border-border pb-8">

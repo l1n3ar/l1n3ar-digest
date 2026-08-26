@@ -4,11 +4,6 @@ import type { GenerationRun } from "@/types/generation-run";
 import { H3, Muted } from "@/components/ui/typography";
 import { formatDate } from "@/utils/format-date";
 
-function formatCost(cost: number | null) {
-  if (cost === null) return "—";
-  return `$${cost.toFixed(4)}`;
-}
-
 function RunItem({ run }: { run: GenerationRun }) {
   const label = run.status === "running" ? "Running…" : run.status === "done" ? "Done" : "Error";
 
@@ -25,8 +20,6 @@ function RunItem({ run }: { run: GenerationRun }) {
             <>
               <span>·</span>
               <span>{run.draftsCreated} draft(s)</span>
-              <span>·</span>
-              <span>{formatCost(run.estimatedCostUsd)}</span>
             </>
           )}
         </Muted>

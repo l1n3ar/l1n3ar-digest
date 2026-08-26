@@ -3,6 +3,7 @@
 import { after } from 'next/server';
 import { publishEntry, unpublishEntry, deleteEntry, generateDrafts } from '@/engine/lib/digest';
 import { createRun } from '@/engine/lib/generation-runs';
+import { GENERATION_DEEP_READ_ENABLED } from '@/engine/config/feature-flags';
 
 export async function publishAction(id: string) {
   await publishEntry(id);
@@ -17,6 +18,7 @@ export async function deleteAction(id: string) {
 }
 
 export async function generateAction(deepRead: boolean) {
-  const run = await createRun('manual', deepRead);
-  after(() => generateDrafts(run.id, deepRead));
+  const effectiveDeepRead = GENERATION_DEEP_READ_ENABLED && deepRead;
+  const run = await createRun('manual', effectiveDeepRead);
+  after(() => generateDrafts(run.id, effectiveDeepRead));
 }

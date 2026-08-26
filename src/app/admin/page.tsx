@@ -10,6 +10,7 @@ import { Button } from "@/ui/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/ui/components/ui/dropdown-menu";
 import { useRuns } from "@/ui/hooks/use-runs";
 import { useGenerateRun } from "@/ui/hooks/use-generate-run";
+import { GENERATION_DEEP_READ_ENABLED } from "@/engine/config/feature-flags";
 
 export default function AdminPage() {
   const [tab, setTab] = useState("drafts");
@@ -30,23 +31,28 @@ export default function AdminPage() {
               <TabsTrigger value="runs">Runs</TabsTrigger>
             </TabsList>
 
-            {tab === "runs" && (
-              <DropdownMenu>
-                <DropdownMenuTrigger render={<Button type="button" size="xs" loading={isButtonLoading} />}>
+            {tab === "runs" &&
+              (GENERATION_DEEP_READ_ENABLED ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger render={<Button type="button" size="xs" loading={isButtonLoading} />}>
+                    Generate
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => trigger(false)} className="gap-1.5 text-xs">
+                      <Zap className="size-3.5" />
+                      Quick
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => trigger(true)} className="gap-1.5 text-xs">
+                      <BookOpen className="size-3.5" />
+                      Deep read
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button type="button" size="xs" loading={isButtonLoading} onClick={() => trigger(false)}>
                   Generate
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => trigger(false)} className="gap-1.5 text-xs">
-                    <Zap className="size-3.5" />
-                    Quick
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => trigger(true)} className="gap-1.5 text-xs">
-                    <BookOpen className="size-3.5" />
-                    Deep read
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+                </Button>
+              ))}
           </div>
 
           <TabsContent value="drafts" className="mt-6 min-h-0 flex-1 overflow-y-auto">

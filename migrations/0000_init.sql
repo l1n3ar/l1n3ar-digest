@@ -20,7 +20,6 @@ CREATE TABLE "generation_runs" (
 	"input_tokens" integer DEFAULT 0 NOT NULL,
 	"output_tokens" integer DEFAULT 0 NOT NULL,
 	"web_search_requests" integer DEFAULT 0 NOT NULL,
-	"estimated_cost_usd" double precision,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"finished_at" timestamp with time zone
 );

@@ -1,5 +1,5 @@
 {
-  "id": "29f093c2-b1da-49c1-9794-e058684f0c19",
+  "id": "957a6667-f3b0-42ce-a311-f5a3438cf2d4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -138,12 +138,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": 0
-        },
-        "estimated_cost_usd": {
-          "name": "estimated_cost_usd",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
         },
         "created_at": {
           "name": "created_at",
